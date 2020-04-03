@@ -55,7 +55,8 @@ def get_config(FLAGS):
   elif FLAGS.model == 'm2':
     config = M2
 
-  for k, v in FLAGS.__dict__['__flags'].items():
+  #for k, v in FLAGS.__dict__['__flags'].items():
+  for k, v in FLAGS.__flags.items():
     if k == 'gpu':
       if v == False:
         config.cnn_format = 'NHWC'
@@ -63,6 +64,7 @@ def get_config(FLAGS):
         config.cnn_format = 'NCHW'
 
     if hasattr(config, k):
-      setattr(config, k, v)
+      #setattr(config, k, v)
+      setattr(config, k, v.value)
 
   return config

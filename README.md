@@ -1,3 +1,55 @@
+## For installing openai/baselines
+
+1. sudo apt-get update && sudo apt-get install cmake libopenmpi-dev python3-dev zlib1g-dev
+2. pip install virtualenv
+3. virtualenv --python=python3 openai_env
+4. source openai_env/bin/activate
+5. pip install tensorflow==1.14
+6. git clone https://github.com/openai/baselines.git
+7. cd baselines
+8. python setup.py install
+9. Followed link to install https://github.com/openai/mujoco-py
+    * Download the MuJoCo version 2.0 binaries for Linux or OSX.
+    * Unzip the downloaded mujoco200 directory into ~/.mujoco/mujoco200
+    * write https://github.com/MahanFathi/iLQG-MuJoCo/blob/master/bin/mjkey.txt to /home/.mujoco/
+    * export LD_LIBRARY_PATH=/home/shrikant/.mujoco/mujoco200/bin:$LD_LIBRARY_PATH
+    * sudo apt-get install libglew-dev
+    * sudo apt-get install patchelf
+    * sudo apt install libosmesa6-dev libosmesa6 libglapi-mesa
+    * sudo apt-file search "GL/osmesa.h"
+    * sudo apt install --reinstall build-essential & cmake
+    * sudo apt install --reinstall libgl1-mesa-dev
+    * (may not be required.)sudo apt install --reinstall libgl1-mesa-glx
+    * sudo ln -s /usr/lib/x86_64-linux-gnu/libGL.so.1 /usr/lib/libGL.so
+    * pip install -U 'mujoco-py<2.1,>=2.0'
+10. pip install pytest
+11. python -m baselines.run --alg=deepq --env=PongNoFrameskip-v4 --num_timesteps=1e6
+
+
+Exploring : python -m baselines.run --alg=deepq --env=PongNoFrameskip-v4 --num_timesteps=1e6
+## Changes made in the code to run it on python3.6.9
+If you dont have gpu:
+```
+--use_gpu=False
+```
+
+* agent.py
+```
+@ line : 227,376 : xrange --> range
+# NameError: name 'reduce' is not defined :
+from functools import reduce
+# TypeError: unsupported operand type(s) for +: 'dict_values' and 'list' :
+@ line 328 : self.w.values() --> list(self.w.values())
+
+```
+* environment.py
+```
+@ line : 23,73 : xrange --> range
+# AssertionError: Cannot call env.step() before calling reset():
+@ line 16 : self._screen = None --> self._screen = self.env.reset()
+```
+
+
 # Human-Level Control through Deep Reinforcement Learning
 
 Tensorflow implementation of [Human-Level Control through Deep Reinforcement Learning](http://home.uchicago.edu/~arij/journalclub/papers/2015_Mnih_et_al.pdf).
